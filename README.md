@@ -8,11 +8,7 @@ bsf init
 ## Building OCI artifact using bsf and ko
 ```
 bsf oci pkgs --platform=linux/amd64 --tag=prod-v1 --push --dest-creds ${USER}:${PASSWORD}
-<<<<<<< HEAD
-KO_DOCKER_REPO=sp3ar007/dgolang-project KO_DEFAULTBASEIMAGE=sp3ar007/golang-proj:base ko build --bare -t v1 .
-=======
 KO_DOCKER_REPO=sp3ar007/devops-project KO_DEFAULTBASEIMAGE=sp3ar007/golang-project:base ko build --bare -t v1 .
->>>>>>> f4b094c92873d554a53e01ccec7fabbe7729a791
 ```
 ## Running using Docker
 ```
