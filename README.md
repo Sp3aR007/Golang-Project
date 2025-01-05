@@ -1,7 +1,4 @@
-This repo is for the video below 
-
-
-[![Conplete DevOps Project](https://img.youtube.com/vi/kCWAwXFnYic/0.jpg)](https://www.youtube.com/watch?v=kCWAwXFnYic)
+Golang and Devops project
 
 # Running Locally 
 ## Initialising for base image
@@ -10,8 +7,8 @@ bsf init
 ``` 
 ## Building OCI artifact using bsf and ko
 ```
-bsf oci pkgs --platform=linux/amd64 --tag=prod-v1 --push --dest-creds {Dockerhub username}:{dockerhub password}
-KO_DOCKER_REPO=saiyam911/devops-project KO_DEFAULTBASEIMAGE=saiyam911/devops-proj:base ko build --bare -t v1 . (change your image names here)
+bsf oci pkgs --platform=linux/amd64 --tag=prod-v1 --push --dest-creds ${USER}:${PASSWORD}
+KO_DOCKER_REPO=sp3ar007/devops-project KO_DEFAULTBASEIMAGE=sp3ar007/golang-project:base ko build --bare -t v1 .
 ```
 ## Running using Docker
 ```
