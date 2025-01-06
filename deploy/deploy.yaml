@@ -97,7 +97,7 @@ spec:
     tls:
       mode: Terminate
       certificateRefs:
-      - name: app-kubesimplify-com-tls
+      - name: tls-secret
         kind: Secret
         group: ""
   - name: argo-http
