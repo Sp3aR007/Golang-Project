@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: my-app
-        image: docker.io/sp3ar007/golang-project:sha-1745baf
+        image: docker.io/sp3ar007/golang-project:sha-283557a
         imagePullPolicy: Always
         env:
         - name: DB_USERNAME
@@ -97,7 +97,7 @@ spec:
     tls:
       mode: Terminate
       certificateRefs:
-      - name: tls-secret
+      - name: app-kubesimplify-com-tls
         kind: Secret
         group: ""
   - name: argo-http
