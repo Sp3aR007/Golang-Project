@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: my-app
-        image: docker.io/sp3ar007/golang-project:sha-283557a
+        image: docker.io/sp3ar007/golang-project:sha-c060042
         imagePullPolicy: Always
         env:
         - name: DB_USERNAME
@@ -86,9 +86,9 @@ spec:
   - name: http
     port: 80
     protocol: HTTP
-    hostname: "34.16.39.176.nip.io"
+    hostname: "app.kubesimplify.com"
   - name: https
-    hostname: "34.16.39.176.nip.io"
+    hostname: "app.kubesimplify.com"
     port: 443
     protocol: HTTPS
     allowedRoutes:
@@ -128,7 +128,7 @@ spec:
   - name: app-gateway
     namespace: default
   hostnames:
-  - "34.16.39.176.nip.io"
+  - "app.kubesimplify.com"
   rules:
   - matches:
     - path:
