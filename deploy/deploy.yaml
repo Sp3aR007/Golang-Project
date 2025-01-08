@@ -86,9 +86,9 @@ spec:
   - name: http
     port: 80
     protocol: HTTP
-    hostname: "app.kubesimplify.com"
+    hostname: "34.16.39.176.nip.io"
   - name: https
-    hostname: "app.kubesimplify.com"
+    hostname: "34.16.39.176.nip.io"
     port: 443
     protocol: HTTPS
     allowedRoutes:
@@ -128,7 +128,7 @@ spec:
   - name: app-gateway
     namespace: default
   hostnames:
-  - "app.kubesimplify.com"
+  - "34.16.39.176.nip.io"
   rules:
   - matches:
     - path:
