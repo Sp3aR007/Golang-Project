@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: my-app
-        image: docker.io/sp3ar007/golang-project:sha-f185ca4
+        image: docker.io/sp3ar007/golang-project:sha-073cd9c
         imagePullPolicy: Always
         env:
         - name: DB_USERNAME
