@@ -103,9 +103,9 @@ spec:
   - name: argo-http
     port: 80
     protocol: HTTP
-    hostname: "argo.kubesimplify.com"
+    hostname: "argo.34.16.39.176.nip.io"
   - name: argo-https
-    hostname: "argo.kubesimplify.com"
+    hostname: "argo.34.16.39.176.nip.io"
     port: 443
     protocol: HTTPS
     allowedRoutes:

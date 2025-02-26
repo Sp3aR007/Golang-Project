@@ -1,6 +1,7 @@
-Golang and Devops project
+A Golang applciation build with Gin framework, containerized with Docker, orchestrated with Kubernetes, Github Actions for Continuous Integration, ArgoCD for Continuous Delivery, Prometheus for metrics, Grafana for visualization and GatewayAPI for routing and TLS.
 
 # Running Locally 
+
 ## Initialising for base image
 ```
 bsf init
@@ -8,7 +9,7 @@ bsf init
 ## Building OCI artifact using bsf and ko
 ```
 bsf oci pkgs --platform=linux/amd64 --tag=prod-v1 --push --dest-creds ${USER}:${PASSWORD}
-KO_DOCKER_REPO=sp3ar007/devops-project KO_DEFAULTBASEIMAGE=sp3ar007/golang-project:base ko build --bare -t v1 .
+KO_DOCKER_REPO=sp3ar007/golang-project KO_DEFAULTBASEIMAGE=sp3ar007/golang-proj:base ko build --bare -t v1 .
 ```
 ## Running using Docker
 ```
@@ -29,37 +30,33 @@ docker run -d \
   -e DB_PORT=5432 \
   -e DB_NAME=mydb \
   -e SSL=disable \
- ttl.sh/devops-project-1a3a3957a5f042748486580be307ed8e@sha256:9ae320cdf05700210dd50ebefa6b3cd4a11ca2feaad1946f6715e0ec725bda62
-```
+  sp3ar007/golang-project:sha-073cd9c
+```    
 
-## Cluster creatiom 
-```ksctl create-cluster azure --name=application --version=1.29```
-
-## Switching the KubeConfig file 
-```ksctl switch-cluster --provider azure --region eastus --name devops-project```
-
-## Exporting Kubeconfig
-```export KUBECONFIG="/Users/saiyam/.ksctl/kubeconfig"```              
+# Kubernetes Deployment
 
 ## Installing basic componenets cert manager, nginx fabric for gateway API, Prometheus. for monitoring and Grafana for visualization. 
-### Cert manager
+
+### Cert Manager
 ```
 kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.15.3/cert-manager.yaml
 ```
-Edit cert-manager deployment 
+### Edit cert-manager deployment 
 ```
 - --enable-gateway-api
 ```
-```kubectl rollout restart deployment cert-manager -n cert-manager```
+```
+kubectl rollout restart deployment cert-manager -n cert-manager
+```
 
-### Install Kube prometheus stack
+## Install Kube prometheus stack
 ```
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
 
 ```
-### Getting Grafana login secret for admin user
+## Getting Grafana login secret for admin user
 
 ```
 kubectl get secret --namespace monitoring kube-prometheus-stack-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
@@ -74,36 +71,26 @@ helm install ngf oci://ghcr.io/nginxinc/charts/nginx-gateway-fabric --create-nam
 
 
 ## Install Cloudnative postgress DB 
+
 ```
 kubectl apply --server-side -f https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.23/releases/cnpg-1.23.1.yaml
 ```
+
+## Deploy PostgresDB cluster
+
+```    
+kubectl apply -f pg_cluster.yaml   
 ```
-cat << EOF | kubectl apply -f -
-apiVersion: postgresql.cnpg.io/v1
-kind: Cluster
-metadata:
-  name: my-postgresql
-  namespace: default
-spec:
-  instances: 3
-  storage:
-    size: 1Gi
-  bootstrap:
-    initdb:
-      database: goals_database
-      owner: goals_user
-      secret:
-        name: my-postgresql-credentials
-EOF        
+## Creating secret for cluster
+
 ```
-### Creating secret for cluster
-```
-kubectl create secret generic my-postgresql-credentials --from-literal=password='new_password'  --from-literal=username='goals_user'  --dry-run=client -o yaml | kubectl apply -f -
-kubectl exec -it my-postgresql-1 -- psql -U postgres -c "ALTER USER goals_user WITH PASSWORD 'new_password';"
+kubectl apply -f secret.yaml
 ```
 
-### Creating Table inside the database
+## Creating Table inside the database
+
 ```
+kubectl exec -it my-postgresql-1 -- psql -U postgres -c "ALTER USER goals_user WITH PASSWORD 'new_password';"
 kubectl port-forward my-postgresql-1 5432:5432
 PGPASSWORD='new_password' psql -h 127.0.0.1 -U goals_user -d goals_database -c "
 
@@ -114,24 +101,15 @@ CREATE TABLE goals (
 "
 ```
 
-### Create secret to be used by the application 
+## Create secret to be used by the application 
 ```
-cat << EOF | kubectl apply -f - 
-apiVersion: v1
-kind: Secret
-metadata:
-  name: postgresql-credentials
-type: Opaque
-data:
-  password: bmV3X3Bhc3N3b3Jk
-  username: Z29hbHNfdXNlcg==
-EOF
+kubectl apply -f app-secret.yaml
 ```
 
 
-### Application deployment(Currently this has the gateway for both Argocd and the application)
+## Application deployment(Currently this has the gateway for both Argocd and the application)
 ```
-kubectl apply -f deploy/deploy,yaml
+kubectl apply -f deploy/deploy.yaml
 ```
 
 ## Argocd installation 
@@ -143,12 +121,32 @@ kubectl rollout restart deployment argocd-server -n argocd
 kubectl get secret --namespace argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 --decode ; echo 
 ```
 
-## Create Route for ArgoCD 
+## Create Route for ArgoCD  
 ```
 kubectl apply -f route-argo.yaml
-kubectl apply -f referencegrant
+kubectl apply -f referencegrant.yaml
+```
+
+## Create Horizontal Pod Autoscaler for scaling of Pods
+```
+kubectl apply -f hpa.yaml
+
 ```
 ## Load testing 
 ```
 k6s run load.js
 ```
+
+# Deployment Details
+
+## Kubernetes Deployment
+
+![kubernetes-Deployment](images/k8s-deploy.png)
+
+## Continuous Delivery with ArgoCD
+
+![ArgoCD](images/k8s-argocd.png)
+
+## Prometheus Metrics
+
+![Prometheus](images/prometheus.png)
