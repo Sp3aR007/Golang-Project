@@ -1,0 +1,20 @@
+
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: go-app-route
+spec:
+  parentRefs:
+  - name: app-gateway
+    namespace: default
+  hostnames:
+  - "34.16.39.176.nip.io"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: my-app-service
+      port: 80
