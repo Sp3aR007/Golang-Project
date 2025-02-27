@@ -27,7 +27,6 @@ docker run -d \
   -e DB_USERNAME=myuser \
   -e DB_PASSWORD=mypassword \
   -e DB_HOST=host.docker.internal \
-  -e DB_PORT=5432 \
   -e DB_NAME=mydb \
   -e SSL=disable \
   sp3ar007/golang-project:sha-073cd9c
@@ -79,12 +78,12 @@ kubectl apply --server-side -f https://raw.githubusercontent.com/cloudnative-pg/
 ## Deploy PostgresDB cluster
 
 ```    
-kubectl apply -f pg_cluster.yaml   
+kubectl apply -f deploy/pg_cluster.yaml   
 ```
 ## Creating secret for cluster
 
 ```
-kubectl apply -f secret.yaml
+kubectl apply -f deploy/secret.yaml
 ```
 
 ## Creating Table inside the database
@@ -103,15 +102,24 @@ CREATE TABLE goals (
 
 ## Create secret to be used by the application 
 ```
-kubectl apply -f app-secret.yaml
+kubectl apply -f deploy/app-secret.yaml
 ```
 
 
-## Application deployment(Currently this has the gateway for both Argocd and the application)
+## Application deployment and deployment service
 ```
+kubectl apply -f deploy/app-service.yaml
 kubectl apply -f deploy/deploy.yaml
 ```
+## Create Gateway for Application and ArgoCD
+```
+kubectl apply -f deploy/gateway.yaml
+```
 
+## Create route for Application
+```
+kubectl apply -f deploy/app-route.yaml
+```
 ## Argocd installation 
 ```
 kubectl create namespace argocd
@@ -123,18 +131,18 @@ kubectl get secret --namespace argocd argocd-initial-admin-secret -o jsonpath="{
 
 ## Create Route for ArgoCD  
 ```
-kubectl apply -f route-argo.yaml
-kubectl apply -f referencegrant.yaml
+kubectl apply -f deploy/route-argo.yaml
+kubectl apply -f deploy/referencegrant.yaml
 ```
 
 ## Create Horizontal Pod Autoscaler for scaling of Pods
 ```
-kubectl apply -f hpa.yaml
+kubectl apply -f deploy/hpa.yaml
 
 ```
 ## Load testing 
 ```
-k6s run load.js
+k6s run deploy/load.js
 ```
 
 # Deployment Details
