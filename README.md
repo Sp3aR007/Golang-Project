@@ -1,4 +1,4 @@
-A Golang applciation build with Gin framework, containerized with Docker, orchestrated with Kubernetes, Github Actions for Continuous Integration, ArgoCD for Continuous Delivery, Prometheus for metrics, Grafana for visualization and GatewayAPI for routing and TLS.
+A Golang applciation build with Gin framework, containerized with Docker, orchestrated with Kubernetes, Github Actions for Continuous Integration, ArgoCD for Continuous Deployment, Prometheus for metrics, Grafana for visualization and GatewayAPI for routing and TLS.
 
 # Running Locally 
 
@@ -106,17 +106,17 @@ kubectl apply -f deploy/app-secret.yaml
 ```
 
 
-## Application deployment and deployment service
+## Create deployment and  service for application
 ```
 kubectl apply -f deploy/app-service.yaml
 kubectl apply -f deploy/deploy.yaml
 ```
-## Create Gateway for Application and ArgoCD
+## Create Gateway for application and ArgoCD
 ```
 kubectl apply -f deploy/gateway.yaml
 ```
 
-## Create route for Application
+## Create route for application
 ```
 kubectl apply -f deploy/app-route.yaml
 ```
@@ -151,7 +151,7 @@ k6s run deploy/load.js
 
 ![kubernetes-Deployment](images/k8s-deploy.png)
 
-## Continuous Delivery with ArgoCD
+## Continuous deployment with ArgoCD
 
 ![ArgoCD](images/k8s-argocd.png)
 
